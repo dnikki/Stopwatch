@@ -12,6 +12,7 @@ import android.widget.TextView;
 public class MainActivity extends AppCompatActivity {
     private static int seconds=0;
     private  boolean running;
+    private boolean delay;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,20 +38,24 @@ public class MainActivity extends AppCompatActivity {
 
     public void start_button(View view) {
         running=true;
+        delay=false;
     }
 
     public void stop_button(View view) {
         running=false;
+        delay=false;
     }
 
     public void reset_button(View view) {
         running=false;
+        delay=false;
         seconds=0;
     }
 
     public void onRun(){
         final TextView time=(TextView)findViewById(R.id.time_view);
         final Handler handler=new Handler();
+
         handler.post(new Runnable() {
             @Override
             public void run() {
@@ -63,9 +68,14 @@ public class MainActivity extends AppCompatActivity {
                 if(running){
                     seconds++;
                 }
-                handler.postDelayed(this,1000);
+                if(delay==true){
+                    handler.postDelayed(this,1000);
+                }
+                else{
+                    delay=true;
+                    handler.postDelayed(this,0);
+                }
             }
-
         });
     }
 }
